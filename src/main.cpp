@@ -10,13 +10,15 @@ void setup() {
     vInitBuzzerPin(gaptBuzzerList[i]);
   }
 
-  
+  // init reset pin
+  pinMode(PIN_RESET, INPUT);
+
 }
 
 void loop() {
   
   // reset game state
-  
+  if (true == digitalRead(PIN_RESET)) gboGameState = 0;
 
   if (0 == gboGameState)
   {
