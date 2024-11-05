@@ -3,6 +3,8 @@
 
 #define N_BUZZER 5
 
+#define PIN_RESET 4
+
 #define PIN_BUZZER_LED_GREEN 13
 #define PIN_BUZZER_LED_BLUE 12
 #define PIN_BUZZER_LED_RED 11

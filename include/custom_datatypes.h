@@ -2,5 +2,4 @@
 #define CUSTOM_DATATPYES_H
 
 
-
 #endif

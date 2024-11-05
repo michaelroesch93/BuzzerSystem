@@ -2,21 +2,45 @@
 #include "buzzer.h"
 #include "config.h"
 
+bool gboGameState = 0;
+
 
 // put function declarations here:
 int myFunction(int, int);
 
 void setup() {
   // init of buzzer 
-  vInitBuzzerPins(&gtBuzzerGreen);
-  vInitBuzzerPins(&gtBuzzerBlue);
-  vInitBuzzerPins(&gtBuzzerRed);
-  vInitBuzzerPins(&gtBuzzerYellow);
-  vInitBuzzerPins(&gtBuzzerWhite);
+  for (int i = 0; i < N_BUZZER; i++) {
+    vInitBuzzerPin(gaptBuzzerList[i]);
+  }
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  
+  if (0 == gboGameState)
+  {
+    // read all inputs
+    vReadFromInputPin(&gtBuzzerGreen);
+    vReadFromInputPin(&gtBuzzerBlue);
+    vReadFromInputPin(&gtBuzzerRed);
+    vReadFromInputPin(&gtBuzzerYellow);
+    vReadFromInputPin(&gtBuzzerWhite);
+  }
+
+
+  // process all inputs
+  if (true == boIsBuzzerPressed(&gtBuzzerGreen)) {
+    vSetLEDState(&gtBuzzerGreen, true);
+  } else {
+    vSetLEDState(&gtBuzzerGreen, false);
+  }
+
+  // write output pins
+  vWriteToLEDPin(&gtBuzzerGreen);
+  vWriteToLEDPin(&gtBuzzerBlue);
+  vWriteToLEDPin(&gtBuzzerRed);
+  vWriteToLEDPin(&gtBuzzerYellow);
+  vWriteToLEDPin(&gtBuzzerWhite);
 }
 
 // put function definitions here:

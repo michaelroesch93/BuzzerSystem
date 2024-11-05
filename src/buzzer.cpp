@@ -10,7 +10,9 @@ TBuzzer gtBuzzerRed      = {PIN_BUZZER_INPUT_RED, PIN_BUZZER_LED_RED, false, fal
 TBuzzer gtBuzzerYellow   = {PIN_BUZZER_INPUT_YELLOW, PIN_BUZZER_LED_YELLOW, false, false};
 TBuzzer gtBuzzerWhite    = {PIN_BUZZER_INPUT_WHITE, PIN_BUZZER_LED_WHITE, false, false};
 
-void vInitBuzzerPins(TBuzzer *ptBuzzer)
+TBuzzer *gaptBuzzerList[N_BUZZER] = {&gtBuzzerGreen, &gtBuzzerBlue, &gtBuzzerRed, &gtBuzzerYellow, &gtBuzzerWhite};
+
+void vInitBuzzerPin(TBuzzer *ptBuzzer)
 {
     // init input pin
     pinMode(ptBuzzer->iPinInputSwitch, INPUT);
@@ -28,7 +30,7 @@ void vWriteToLEDPin(TBuzzer *ptBuzzer)
     digitalWrite(ptBuzzer->iPinOutputLED, ptBuzzer->boStateLEDOutput);
 }
 
-void boSetLEDState(TBuzzer *ptBuzzer, bool boOutputValue)
+void vSetLEDState(TBuzzer *ptBuzzer, bool boOutputValue)
 {
     ptBuzzer->boStateLEDOutput = boOutputValue;
 }
