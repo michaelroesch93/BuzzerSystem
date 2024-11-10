@@ -1,22 +1,26 @@
 #include <Arduino.h>
-#include "buzzer.h"
 #include "config.h"
 
-bool gboGameState = 0;
+bool gboGameRunning = true;
 
 void setup() {
   
   Serial.begin(9600);
   // debug
   Serial.write("Initializing... \n");
-  // init of buzzer 
-  for (int i = 0; i < N_BUZZER; i++) {
-    vInitBuzzerPin(gaptBuzzerList[i]);
-  }
 
-  
-  
-
+  // init inputs
+  pinMode(PIN_BUZZER_INPUT_GREEN, INPUT);
+  pinMode(PIN_BUZZER_INPUT_BLUE, INPUT);
+  pinMode(PIN_BUZZER_INPUT_RED, INPUT);
+  pinMode(PIN_BUZZER_INPUT_YELLOW, INPUT);
+  pinMode(PIN_BUZZER_INPUT_WHITE, INPUT);
+  // init outputs
+  pinMode(PIN_BUZZER_LED_GREEN, OUTPUT);
+  pinMode(PIN_BUZZER_LED_BLUE, OUTPUT);
+  pinMode(PIN_BUZZER_LED_RED, OUTPUT);
+  pinMode(PIN_BUZZER_LED_YELLOW, OUTPUT);
+  pinMode(PIN_BUZZER_LED_WHITE, OUTPUT);
   // init reset pin
   pinMode(PIN_RESET, INPUT);
 
@@ -25,34 +29,39 @@ void setup() {
 
 void loop() {
   
-  uint8_t ui8ValueGreen, ui8ValueBlue;
+  bool boInputReset = false;
+  bool boBuzzerGreen = false;
+  bool boBuzzerBlue = false;
+  bool boBuzzerRed = false;
+  bool boBuzzerYellow = false;
+  bool boBuzzerWhite = false;
 
-  ui8ValueGreen = (uint8_t) digitalRead(PIN_BUZZER_INPUT_GREEN);
-  ui8ValueBlue = (uint8_t) digitalRead(PIN_BUZZER_INPUT_BLUE);
+  if (true == gboGameRunning) {
+
+    boBuzzerGreen = (uint8_t) digitalRead(PIN_BUZZER_INPUT_GREEN);
+    boBuzzerBlue = (uint8_t) digitalRead(PIN_BUZZER_INPUT_BLUE);
+    boBuzzerRed = (uint8_t) digitalRead(PIN_BUZZER_INPUT_RED);
+    boBuzzerYellow = (uint8_t) digitalRead(PIN_BUZZER_INPUT_YELLOW);
+    boBuzzerWhite = (uint8_t) digitalRead(PIN_BUZZER_INPUT_WHITE);
 
 
-  digitalWrite(PIN_BUZZER_LED_GREEN, ui8ValueGreen);
-  digitalWrite(PIN_BUZZER_LED_BLUE, ui8ValueBlue);
+    digitalWrite(PIN_BUZZER_LED_GREEN, boBuzzerGreen);
+    digitalWrite(PIN_BUZZER_LED_BLUE, boBuzzerBlue);
+    digitalWrite(PIN_BUZZER_LED_RED, boBuzzerRed);
+    digitalWrite(PIN_BUZZER_LED_YELLOW, boBuzzerYellow);
+    digitalWrite(PIN_BUZZER_LED_WHITE, boBuzzerWhite);
   
-  #ifdef COMMENT_OUT
-
-  // reset game state
-  if (true == digitalRead(PIN_RESET)) gboGameState = 0;
-
-  if (0 == gboGameState)
-  {
-    // read all inputs
-    for (int i = 0; i < N_BUZZER; i++) {
-
-      // read the switch pin
-      vReadFromInputPin(gaptBuzzerList[i]);
-
-      if (true == boIsBuzzerPressed(gaptBuzzerList[i])) 
-      {
-        vWriteToLEDPin(gaptBuzzerList[i]);
-        gboGameState = 1;
-      }      
-    }
   }
-  #endif
+
+  // end game
+  if (boBuzzerGreen == true) gboGameRunning = false;
+  if (boBuzzerBlue == true) gboGameRunning = false;
+  if (boBuzzerRed == true) gboGameRunning = false;
+  if (boBuzzerYellow == true) gboGameRunning = false;
+  if (boBuzzerWhite == true) gboGameRunning = false;
+
+  // process reset
+  boInputReset = (uint8_t) digitalRead(PIN_RESET);
+  if (boInputReset != 0) gboGameRunning = true; 
+
 }
