@@ -22,7 +22,7 @@ void vInitBuzzerPin(TBuzzer *ptBuzzer)
 
 void vReadFromInputPin(TBuzzer *ptBuzzer)
 {
-    ptBuzzer->boStateSwitchInput = ptBuzzer->iPinInputSwitch;
+    ptBuzzer->boStateSwitchInput = digitalRead(ptBuzzer->iPinInputSwitch);
 }
 
 void vWriteToLEDPin(TBuzzer *ptBuzzer)
