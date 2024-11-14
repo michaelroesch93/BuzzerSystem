@@ -10,31 +10,28 @@ void setup() {
   Serial.write("Initializing... \n");
 
   // init inputs
-  pinMode(PIN_BUZZER_INPUT_GREEN, INPUT);
-  pinMode(PIN_BUZZER_INPUT_BLUE, INPUT);
-  pinMode(PIN_BUZZER_INPUT_RED, INPUT);
-  pinMode(PIN_BUZZER_INPUT_YELLOW, INPUT);
-  pinMode(PIN_BUZZER_INPUT_WHITE, INPUT);
+  pinMode(PIN_BUZZER_INPUT_GREEN, INPUT_PULLUP);
+  pinMode(PIN_BUZZER_INPUT_BLUE, INPUT_PULLUP);
+  pinMode(PIN_BUZZER_INPUT_RED, INPUT_PULLUP);
+  pinMode(PIN_BUZZER_INPUT_YELLOW, INPUT_PULLUP);
   // init outputs
   pinMode(PIN_BUZZER_LED_GREEN, OUTPUT);
   pinMode(PIN_BUZZER_LED_BLUE, OUTPUT);
   pinMode(PIN_BUZZER_LED_RED, OUTPUT);
   pinMode(PIN_BUZZER_LED_YELLOW, OUTPUT);
-  pinMode(PIN_BUZZER_LED_WHITE, OUTPUT);
   // init reset pin
-  pinMode(PIN_RESET, INPUT);
+  pinMode(PIN_RESET, INPUT_PULLUP);
 
   Serial.write("done \n");
 }
 
 void loop() {
   
-  bool boInputReset = false;
-  bool boBuzzerGreen = false;
-  bool boBuzzerBlue = false;
-  bool boBuzzerRed = false;
-  bool boBuzzerYellow = false;
-  bool boBuzzerWhite = false;
+  bool boInputReset = true;
+  bool boBuzzerGreen = true;
+  bool boBuzzerBlue = true;
+  bool boBuzzerRed = true;
+  bool boBuzzerYellow = true;
 
   if (true == gboGameRunning) {
 
@@ -42,26 +39,29 @@ void loop() {
     boBuzzerBlue = (uint8_t) digitalRead(PIN_BUZZER_INPUT_BLUE);
     boBuzzerRed = (uint8_t) digitalRead(PIN_BUZZER_INPUT_RED);
     boBuzzerYellow = (uint8_t) digitalRead(PIN_BUZZER_INPUT_YELLOW);
-    boBuzzerWhite = (uint8_t) digitalRead(PIN_BUZZER_INPUT_WHITE);
 
 
-    digitalWrite(PIN_BUZZER_LED_GREEN, boBuzzerGreen);
-    digitalWrite(PIN_BUZZER_LED_BLUE, boBuzzerBlue);
-    digitalWrite(PIN_BUZZER_LED_RED, boBuzzerRed);
-    digitalWrite(PIN_BUZZER_LED_YELLOW, boBuzzerYellow);
-    digitalWrite(PIN_BUZZER_LED_WHITE, boBuzzerWhite);
+    digitalWrite(PIN_BUZZER_LED_GREEN, !boBuzzerGreen);
+    digitalWrite(PIN_BUZZER_LED_BLUE, !boBuzzerBlue);
+    digitalWrite(PIN_BUZZER_LED_RED, !boBuzzerRed);
+    digitalWrite(PIN_BUZZER_LED_YELLOW, !boBuzzerYellow);
   
   }
 
   // end game
-  if (boBuzzerGreen == true) gboGameRunning = false;
-  if (boBuzzerBlue == true) gboGameRunning = false;
-  if (boBuzzerRed == true) gboGameRunning = false;
-  if (boBuzzerYellow == true) gboGameRunning = false;
-  if (boBuzzerWhite == true) gboGameRunning = false;
+  if (boBuzzerGreen == false) gboGameRunning = false;
+  if (boBuzzerBlue == false) gboGameRunning = false;
+  if (boBuzzerRed == false) gboGameRunning = false;
+  if (boBuzzerYellow == false) gboGameRunning = false;
 
   // process reset
   boInputReset = (uint8_t) digitalRead(PIN_RESET);
-  if (boInputReset != 0) gboGameRunning = true; 
+  if (boInputReset == 0) gboGameRunning = true;
 
+  if (boBuzzerRed == 0) {
+    Serial.write("o");
+  } else {
+    Serial.write("x");
+  }
+  
 }
